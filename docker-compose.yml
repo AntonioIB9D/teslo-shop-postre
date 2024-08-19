@@ -1,0 +1,22 @@
+# Creación del servicio
+services:
+  # Base de datos
+  db:
+    # Como imagen será postgres 14.3 versión
+    image: postgres:14.3
+    # Si se cae intentará reconectarse
+    restart: always
+    # El puerto de conexión será el 5432 para la pc y el contenedor
+    ports:
+      - '5432:5432'
+    # Las variables de entorno, POSTGRES obliga a declarar dos
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    # Nombre del contenedor
+    container_name: testlodb
+    # Para no perder la data por destruir el contenedor, usaremos volumenes
+    # Conectar de la carpeta ./postgres que no existe y la creará en el root del proyecto
+    # Y la conectara a la carpeta del contenedor(Lugar por defecto donde se esta grabando la data en el contenedor )
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
