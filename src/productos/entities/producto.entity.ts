@@ -3,10 +3,15 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  JoinTable,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ProductImage } from './product-image.entity';
 
-@Entity()
+@Entity({
+  name: 'products',
+})
 export class Producto {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -53,6 +58,15 @@ export class Producto {
   })
   tags: string[];
   //Images
+  // El callback regrese un ProductImage
+  // Relación del ProductImage con nuestra tabla
+  // Opciones, cascade: Elimina todo lo relacionado al elemento
+  // No es una columna, es una relación
+  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+    cascade: true,
+    eager: true,
+  })
+  images?: ProductImage[];
 
   //Permite revisar antes de insertar
   @BeforeInsert()
