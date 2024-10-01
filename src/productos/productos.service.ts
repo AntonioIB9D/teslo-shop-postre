@@ -13,6 +13,7 @@ import { Producto } from './entities/producto.entity';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { validate as isUUID } from 'uuid';
 import { ProductImage } from './entities/product-image.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProductosService {
@@ -27,7 +28,7 @@ export class ProductosService {
   ) {}
 
   // Creación de un producto
-  async create(createProductoDto: CreateProductoDto) {
+  async create(createProductoDto: CreateProductoDto, user: User) {
     try {
       const { images = [], ...productDetails } = createProductoDto;
       //Esto solo crea la instancia del producto con sus propiedades
@@ -39,6 +40,7 @@ export class ProductosService {
             url: image,
           }),
         ),
+        user,
       });
       // Para guardar e impactar la BD
       await this.productRepository.save(producto);
@@ -100,7 +102,7 @@ export class ProductosService {
   }
 
   // Actualización de un producto mediante ID
-  async update(id: string, updateProductoDto: UpdateProductoDto) {
+  async update(id: string, updateProductoDto: UpdateProductoDto, user: User) {
     const { images, ...toUpdate } = updateProductoDto;
 
     const product = await this.productRepository.preload({
@@ -138,6 +140,7 @@ export class ProductosService {
         );
       }
 
+      product.user = user;
       // QueryRunner guarda la información en la BD
       await queryRunner.manager.save(product);
       /*  await this.productRepository.save(product); */

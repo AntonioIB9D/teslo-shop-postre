@@ -9,12 +9,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { FilesService } from './files.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { fileFilter } from './helpers/fileFilter.helper';
-import { diskStorage } from 'multer';
-import { fileNamer } from './helpers/fileNamer.helper';
 import { ConfigService } from '@nestjs/config';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import { FilesService } from './files.service';
+import { fileFilter } from './helpers/fileFilter.helper';
+import { fileNamer } from './helpers/fileNamer.helper';
+import { diskStorage } from 'multer';
 
 @Controller('files')
 export class FilesController {

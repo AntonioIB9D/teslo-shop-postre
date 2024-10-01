@@ -3,11 +3,12 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinTable,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductImage } from './product-image.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Entity({
   name: 'products',
@@ -67,6 +68,12 @@ export class Producto {
     eager: true,
   })
   images?: ProductImage[];
+  /* Primer valor es la entidad con la cual se va a relacionar*/
+  /* En el segundo deberá saber como relacionarse con la otra tabla */
+  @ManyToOne(() => User, (user) => user.product, {
+    eager: true,
+  })
+  user: User;
 
   //Permite revisar antes de insertar
   @BeforeInsert()
