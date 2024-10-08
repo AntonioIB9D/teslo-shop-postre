@@ -9,15 +9,20 @@ import {
   Query,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ValidRoles } from 'src/auth/interfaces/valid-roles';
 import { GetUser } from 'src/auth/decorators';
 import { User } from 'src/auth/entities/user.entity';
+import { Producto } from './entities/producto.entity';
 
+@ApiTags('Products')
 @Controller('productos')
 export class ProductosController {
   constructor(private readonly productosService: ProductosService) {}
@@ -25,6 +30,19 @@ export class ProductosController {
   /*Solo el admin puede crear productos */
   @Post()
   @Auth()
+  @ApiResponse({
+    status: 201,
+    description: 'Product was created',
+    type: Producto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden. Token related',
+  })
   create(@Body() createProductoDto: CreateProductoDto, @GetUser() user: User) {
     return this.productosService.create(createProductoDto, user);
   }
